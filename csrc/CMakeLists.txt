@@ -77,7 +77,9 @@ target_sources(fma_module PUBLIC
     FILES fma_module.h
 )
 
-target_link_libraries(fma_module PRIVATE m)
+if(NOT WIN32)
+  target_link_libraries(fma_module PRIVATE m)
+endif()
 target_include_directories(fma_module PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
 
 install(
