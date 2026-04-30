@@ -2,7 +2,7 @@
 
 ![coverage](badges/coverage.svg)
 
-A Python **fused multiply-add** (FMA) binding with **32-bit float** support and
+A Python **fused multiply-add** (FMA) binding with **32 and 64-bit float** support and
 **configurable IEEE 754 rounding modes**.
 
 Python 3.13+ provides `math.fma`, but it operates on `float` (IEEE 754 double)
@@ -16,7 +16,7 @@ only and does not expose the rounding direction. This module fills both gaps:
 
 ## Note
 
-I write this project with vibe coding, but I carefully read every line in `/src/` and `/csrc/` folder, so the core logic should be ok.
+I write this project with vibe coding, but I carefully read every line in `/src/` and `/csrc/` folder, and I glanced at test code (and provides some data for rounding test), so the core logic should be ok.
 
 ---
 
