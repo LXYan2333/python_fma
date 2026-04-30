@@ -82,6 +82,12 @@ if(NOT WIN32)
 endif()
 target_include_directories(fma_module PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
 
+if(MSVC)
+  target_compile_options(fma_module PRIVATE /fp:strict)
+elseif(CMAKE_C_COMPILER_ID MATCHES "Clang" OR CMAKE_C_COMPILER_ID MATCHES "GNU")
+  target_compile_options(fma_module PRIVATE -frounding-math -fsignaling-nans)
+endif()
+
 install(
   TARGETS fma_module
   LIBRARY DESTINATION "python_fma"
