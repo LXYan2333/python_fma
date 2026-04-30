@@ -14,6 +14,7 @@ import sys
 __all__: list[str] = []
 
 _ext: str
+# fmt: off
 if sys.platform == "linux":
     _ext = ".so"
 elif sys.platform == "darwin":          # pragma: no cover
@@ -22,6 +23,7 @@ elif sys.platform == "win32":           # pragma: no cover
     _ext = ".dll"                       # pragma: no cover
 else:                                   # pragma: no cover
     raise ImportError(f"unsupported platform: {sys.platform}")
+# fmt: on")
 
 _lib_name = f"libfma_module{_ext}"
 
@@ -30,10 +32,12 @@ _lib_name = f"libfma_module{_ext}"
 # location first (via the editable hook's known_wheel_files mapping), then
 # fall back to __file__-relative for regular installs.
 _spec = _iu.find_spec(f"python_fma.{_lib_name.rsplit('.', 1)[0]}")
+# fmt: off
 if _spec is not None and _spec.origin is not None and os.path.exists(_spec.origin):
     _lib_path = _spec.origin
 else:                                   # pragma: no cover
     _lib_path = os.path.join(os.path.dirname(__file__), _lib_name)
+# fmt: on
 
 lib = ct.CDLL(_lib_path)
 
