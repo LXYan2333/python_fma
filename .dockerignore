@@ -1,0 +1,9 @@
+.venv/
+build/
+*.md
+.git/
+__pycache__/
+.ruff_cache/
+.pyright/
+.mypy_cache/
+.pytest_cache/

@@ -1,0 +1,103 @@
+name: Build wheels
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-linux:
+    name: ${{ matrix.image }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        image:
+          - manylinux2014_x86_64
+          - manylinux_2_28_x86_64
+          - manylinux_2_34_x86_64
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build wheel
+        run: |
+          docker build \
+            --build-arg BASE_IMAGE=quay.io/pypa/${{ matrix.image }} \
+            -t builder \
+            .
+          mkdir -p wheelhouse
+          docker run --rm \
+            -v "${{ github.workspace }}/wheelhouse:/wheelhouse" \
+            builder
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheels-${{ matrix.image }}
+          path: wheelhouse/*.whl
+
+  build-windows:
+    name: windows
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build tools
+        run: pip install cmake scikit-build-core
+
+      - name: Build wheel
+        run: pip wheel . --no-deps -w wheelhouse
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheels-windows
+          path: wheelhouse/*.whl
+
+  build-macos:
+    name: macos
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build tools
+        run: pip install cmake scikit-build-core
+
+      - name: Build wheel
+        run: pip wheel . --no-deps -w wheelhouse
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheels-macos
+          path: wheelhouse/*.whl
+
+  coverage:
+    name: coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install package
+        run: |
+          pip install cmake scikit-build-core
+          pip install -e .
+
+      - name: Run tests with coverage
+        run: pip install pytest-cov && python -m pytest tests/ --cov=python_fma --cov-report=json
+
+      - name: Generate badge
+        run: |
+          mkdir -p badges
+          pip install anybadge
+          total=$(python3 -c "import json; d=json.load(open('coverage.json')); print(f'{float(d[\"totals\"][\"percent_covered_display\"]):.0f}')")
+          anybadge --value="$total" --file=badges/coverage.svg --label=coverage --suffix=% --color=green
+
+      - name: Upload coverage badge
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-badge
+          path: badges/
