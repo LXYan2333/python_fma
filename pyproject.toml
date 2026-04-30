@@ -10,7 +10,7 @@ requires-python = ">=3.10"
 
 [tool.scikit-build]
 wheel.packages = ["src/python_fma"]
-cmake.build-type = "ReWithDebInfo"
+cmake.build-type = "Release"
 wheel.py-api = "py3"
 
 [tool.ruff]
