@@ -94,7 +94,7 @@ jobs:
           mkdir -p badges
           pip install anybadge
           total=$(python3 -c "import json; d=json.load(open('coverage.json')); print(f'{float(d[\"totals\"][\"percent_covered_display\"]):.0f}')")
-          anybadge --value="$total" --file=badges/coverage.svg --label=coverage --suffix=% --color=green
+          anybadge --value="$total" --file=badges/coverage.svg --label=coverage --suffix=% --color=green --overwrite
 
       - name: Upload coverage badge
         uses: actions/upload-artifact@v4
