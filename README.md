@@ -22,12 +22,14 @@ I write this project with vibe coding, but I carefully read every line in `/src/
 
 ## Installation
 
-```sh
-pip install python-fma
-```
-
+Not avaliable yet, I'm still struging with windows installnations. For other platforms, you can get an artifact from the github action.
+<!-- 
+```console
+$ pip install python-fma
+``` -->
+<!-- 
 The package ships a pre-built wheel for Linux x86_64 (manylinux 2014 / 2_28 /
-2_34). On other platforms it builds from source via CMake + scikit-build-core.
+2_34). On other platforms it builds from source via CMake + scikit-build-core. -->
 
 ### Requirements
 
@@ -180,42 +182,42 @@ if not round_mode_compiled("FE_UPWARD"):
 
 ### Setup
 
-```sh
-python -m venv .venv
-source .venv/bin/activate
-pip install -e .
+```console
+$ python -m venv .venv
+$ source .venv/bin/activate
+$ pip install -e .
 ```
 
 ### Lint and type-check
 
-```sh
-ruff check src/ tests/
-ruff format --check src/ tests/
-npx pyright src/ tests/
+```console
+$ ruff check src/ tests/
+$ ruff format --check src/ tests/
+$ npx pyright src/ tests/
 ```
 
 ### Test
 
-```sh
-python -m pytest tests/ -v
+```console
+$ python -m pytest tests/ -v
 ```
 
 ### Build a wheel
 
-```sh
-pip install build
-python -m build
+```console
+$ pip install build
+$ python -m build
 ```
 
 ### CI / Docker build
 
 Manylinux wheels are built via Docker:
 
-```sh
-docker build \
+```console
+$ docker build \
   --build-arg BASE_IMAGE=quay.io/pypa/manylinux2014_x86_64 \
   -t builder .
-docker run --rm -v "$PWD/wheelhouse:/wheelhouse" builder
+$ docker run --rm -v "$PWD/wheelhouse:/wheelhouse" builder
 ```
 
 Windows and macOS wheels are built natively on GitHub Actions runners. See
