@@ -24,4 +24,5 @@ endif()
 install(
   TARGETS fma_module
   LIBRARY DESTINATION "python_fma"
+  RUNTIME DESTINATION "python_fma"
 )
