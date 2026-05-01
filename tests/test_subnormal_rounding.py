@@ -1,13 +1,14 @@
 import ctypes as ct
 
 import pytest
-from python_fma import _ROUND_MODE_MAP
 from tests.helpers import (
     bits_to_double,
     bits_to_float,
     fma_double_raw,
     fma_float_raw,
 )
+
+from python_fma import _ROUND_MODE_MAP  # pyright: ignore[reportPrivateUsage]
 
 
 class TestSubnormalRoundingDouble:
@@ -88,7 +89,7 @@ class TestSubnormalRoundingDouble:
         zero = ct.c_double(0.0)
 
         for mode_name, expected in expected_bits.items():
-            result, flags = fma_double_raw(small, mul, zero, _ROUND_MODE_MAP[mode_name])
+            result, flags = fma_double_raw(small, mul, zero, _ROUND_MODE_MAP[mode_name])  # pyright: ignore[reportArgumentType]
             result_bits = ct.c_uint64.from_buffer(result).value
             assert result_bits == expected, (
                 f"fma({multiplier}g, 2^(-1074), 0) with {mode_name}: "
@@ -169,7 +170,7 @@ class TestSubnormalRoundingFloat:
         zero = ct.c_float(0.0)
 
         for mode_name, expected in expected_bits.items():
-            result, flags = fma_float_raw(small, mul, zero, _ROUND_MODE_MAP[mode_name])
+            result, flags = fma_float_raw(small, mul, zero, _ROUND_MODE_MAP[mode_name])  # pyright: ignore[reportArgumentType]
             result_bits = ct.c_uint32.from_buffer(result).value
             assert result_bits == expected, (
                 f"fma({multiplier}g, 2^(-149), 0) with {mode_name}: "
