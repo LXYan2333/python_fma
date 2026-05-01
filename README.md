@@ -24,14 +24,11 @@ The coverage test rate is high, and all non-platform-dependent code is covered i
 
 ## Installation
 
-Not avaliable yet, I'm still struging with windows installnations. For other platforms, you can get an artifact from the github action.
-<!-- 
 ```console
 $ pip install python-fma
-``` -->
-<!-- 
-The package ships a pre-built wheel for Linux x86_64 (manylinux 2014 / 2_28 /
-2_34). On other platforms it builds from source via CMake + scikit-build-core. -->
+``` 
+
+The package ships a pre-built wheel for Linux, Windows and MacOS, support x86 and ARM architecture.
 
 ### Requirements
 
