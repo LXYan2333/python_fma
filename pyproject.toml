@@ -41,6 +41,9 @@ Homepage = "https://github.com/LXYan2333/python_fma"
 Repository = "https://github.com/LXYan2333/python_fma"
 Issues = "https://github.com/LXYan2333/python_fma/issues"
 
+[tool.coverage.run]
+omit = ["tests/*"]
+
 [tool.scikit-build]
 wheel.packages = ["src/python_fma"]
 cmake.build-type = "Release"
