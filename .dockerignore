@@ -1,6 +1,5 @@
 .venv/
 build/
-*.md
 .git/
 __pycache__/
 .ruff_cache/
