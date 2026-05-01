@@ -254,11 +254,11 @@ def fma(
                 f"unknown rounding mode: {round!r} (expected one of {set(_ROUND_MODE_MAP)})"
             ) from None
         if not _lib.fma_round_mode_compiled(round_mode):
-            raise FeatureNotCompiledError(
+            raise FeatureNotCompiledError(  # pragma: no cover
                 f"rounding mode {round!r} is not available in this build"
             )
         if not _lib.fma_round_mode_supported(round_mode):
-            raise UnsupportedRoundingModeError(
+            raise UnsupportedRoundingModeError(  # pragma: no cover
                 f"rounding mode {round!r} is not supported on this platform"
             )
 

@@ -41,7 +41,7 @@ def _find_library() -> str:
                 return _candidate
 
     # Fallback: alongside this file.
-    return os.path.join(os.path.dirname(__file__), _lib_name)
+    return os.path.join(os.path.dirname(__file__), _lib_name)  # pragma: no cover
 
 
 _lib_path = _find_library()
