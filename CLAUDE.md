@@ -42,7 +42,7 @@ def fma(x: ct_float, y: ct_float, z: ct_float, round:round_mode | None = None, u
 
 Once the project has code, follow these conventions by default unless a specific tool/pattern is established:
 
-- **Type hints**: Use Python 3.10 style type hints everywhere new code is added. The code must be fully type-hinted, and `any` should be avoied when possible.
+- **Type hints**: Use Python 3.10 style type hints everywhere new code is added. The code must be fully type-hinted, and `any` should be avoied when possible. Do not use str when Literal is suitable and possible. Do not duplicate Literals everywhere when it is suitable and possible to write it as one global variable.
 - **Testing**: Use `pytest` for tests
 - **Formatting/linting**: Use `ruff` for both formatting and linting, and use `pyright` strict mode to check types.
 - **Import sorting**: Use `ruff check --select I --fix` for import sorting

@@ -247,4 +247,4 @@ python-fma/
 
 ## License
 
-MIT
+MPL
