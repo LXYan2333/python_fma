@@ -204,8 +204,8 @@ jobs:
           name: wheels-macos-x86_64
           path: wheelhouse/*.whl
 
-  coverage:
-    name: coverage
+  badges:
+    name: badges
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -232,7 +232,7 @@ jobs:
           anybadge --value="$total" --file=badges/coverage.svg --label=coverage --suffix=% --color=green --overwrite
           passed=$(python -c "
           import xml.etree.ElementTree as ET
-          t = ET.parse('test-results.xml').getroot()
+          t = ET.parse('test-results.xml').getroot()[0]
           print(t.attrib['tests'], t.attrib['failures'], t.attrib['errors'], t.attrib['skipped'])
           ")
           tests=$(echo "$passed" | awk '{print $1}')
@@ -245,12 +245,6 @@ jobs:
             color=green
           fi
           anybadge --value="${tests} passed / ${failures} failed / ${skipped} skipped" --file=badges/tests.svg --label=tests --color="$color" --overwrite
-
-      - name: Upload badges
-        uses: actions/upload-artifact@v4
-        with:
-          name: badges
-          path: badges/
 
       - name: Push badges to repo
         if: github.event_name == 'push'
