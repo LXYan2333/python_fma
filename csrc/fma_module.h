@@ -17,11 +17,11 @@ enum fma_round_mode {
 };
 
 enum fma_exc_type {
-  FMA_EXC_INVALID,
-  FMA_EXC_DIVBYZERO,
-  FMA_EXC_OVERFLOW,
-  FMA_EXC_UNDERFLOW,
-  FMA_EXC_INEXACT,
+  FMA_EXC_INVALID = 0,
+  FMA_EXC_DIVBYZERO = 1,
+  FMA_EXC_OVERFLOW = 2,
+  FMA_EXC_UNDERFLOW = 3,
+  FMA_EXC_INEXACT = 4,
 };
 
 FMA_API double fma_double(double x, double y, double z, int round_mode,
@@ -38,4 +38,4 @@ FMA_API bool fma_round_mode_supported(int round_mode);
 
 FMA_API bool fma_round_mode_compiled(int round_mode);
 
-FMA_API bool fma_exception_compiled(enum fma_exc_type exc);
+FMA_API bool fma_exception_compiled(int exc);

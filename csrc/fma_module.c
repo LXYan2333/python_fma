@@ -148,7 +148,7 @@ bool fma_round_mode_compiled(int round_mode) {
   }
 }
 
-bool fma_exception_compiled(enum fma_exc_type exc) {
+bool fma_exception_compiled(int exc) {
   switch (exc) {
   case FMA_EXC_INVALID:
 #ifdef FE_INVALID
