@@ -86,7 +86,7 @@ jobs:
 
   build-windows-arm64:
     name: windows-arm64
-    runs-on: windows-11-arm64
+    runs-on: windows-11-arm
     steps:
       - uses: actions/checkout@v4
 
@@ -128,7 +128,7 @@ jobs:
 
   build-macos-x86_64:
     name: macos-x86_64
-    runs-on: macos-13
+    runs-on: macos-26-intel
     steps:
       - uses: actions/checkout@v4
 
