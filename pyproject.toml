@@ -4,7 +4,7 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "python-fma"
-version = "0.2.1"
+version = "1.0.0"
 description = "Fused multiply-add with 32-bit float support and configurable IEEE 754 rounding modes"
 requires-python = ">=3.10"
 readme = "README.md"
