@@ -31,7 +31,7 @@ class TestFmaExceptions:
             fma(ct.c_float(1e20), ct.c_float(1e20), ct.c_float(0.0))
 
     @pytest.mark.skipif(
-        not exception_compiled("FE_UNDERFLOW"),
+        not exception_compiled(UnderflowException),
         reason="FE_UNDERFLOW not compiled",
     )
     def test_underflow_double(self):
@@ -44,7 +44,7 @@ class TestFmaExceptions:
             )
 
     @pytest.mark.skipif(
-        not exception_compiled("FE_UNDERFLOW"),
+        not exception_compiled(UnderflowException),
         reason="FE_UNDERFLOW not compiled",
     )
     def test_underflow_float(self):
@@ -86,7 +86,7 @@ class TestFmaUnsuppressedException:
         assert isinstance(r, ct.c_double)
 
     @pytest.mark.skipif(
-        not exception_compiled("FE_UNDERFLOW"),
+        not exception_compiled(UnderflowException),
         reason="FE_UNDERFLOW not compiled",
     )
     def test_default_suppresses_underflow(self):

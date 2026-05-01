@@ -29,14 +29,6 @@ _ROUND_MODE_MAP: dict[RoundMode, int] = {
     "FE_TOWARDZERO": 3,
 }
 
-_EXC_TYPE_MAP: dict[ExcType, int] = {
-    "FE_INVALID": 0,
-    "FE_DIVBYZERO": 1,
-    "FE_OVERFLOW": 2,
-    "FE_UNDERFLOW": 3,
-    "FE_INEXACT": 4,
-}
-
 
 class FloatException(Exception):
     """Base for all floating-point operation exceptions."""
@@ -81,16 +73,25 @@ class FeatureNotCompiledError(FloatException):
 
 CtFloat = ct.c_double | ct.c_float
 RoundMode = Literal["FE_TONEAREST", "FE_UPWARD", "FE_DOWNWARD", "FE_TOWARDZERO"]
-ExcType = Literal["FE_INVALID", "FE_DIVBYZERO", "FE_OVERFLOW", "FE_UNDERFLOW", "FE_INEXACT"]
+
+_EXC_TYPE_MAP: dict[type[FloatException], int] = {
+    InvalidException: 0,
+    DivByZeroException: 1,
+    OverflowException: 2,
+    UnderflowException: 3,
+    InexactException: 4,
+}
 
 
-def exception_compiled(name: ExcType) -> bool:
+def exception_compiled(name: type[FloatException]) -> bool:
     """Return whether detection of the floating-point exception *name* is
     available in the C build.
 
     Parameters
     ----------
-    name : ExcType
+    name : FloatException subclass
+        One of ``InvalidException``, ``DivByZeroException``, ``OverflowException``,
+        ``UnderflowException``, or ``InexactException``.
 
     Returns
     -------
@@ -102,13 +103,13 @@ def exception_compiled(name: ExcType) -> bool:
     Raises
     ------
     ValueError
-        *name* is not a recognised exception name.
+        *name* is not a recognised exception class.
     """
     try:
         exc_type = _EXC_TYPE_MAP[name]
     except KeyError:
         raise ValueError(
-            f"unknown exception: {name!r} (expected one of {set(_EXC_TYPE_MAP)})"
+            f"unknown exception: {name} (expected one of {set(_EXC_TYPE_MAP)})"
         ) from None
     return _lib.fma_exception_compiled(exc_type)
 

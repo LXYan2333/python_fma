@@ -37,7 +37,7 @@ The package ships a pre-built wheel for Linux, Windows and MacOS, support x86 an
 if you want to build from source:
 
 - C11 compiler
-- CMake >= 3.15
+- CMake >= 3.25
 
 ---
 
@@ -88,10 +88,9 @@ Return whether detection of the floating-point exception `name` is available in
 the C build.
 
 ```python
-from python_fma import exception_compiled
+from python_fma import exception_compiled, InvalidException
 
-exception_compiled("FE_INVALID")   # True / False
-exception_compiled("FE_NOSUCH")    # ValueError
+exception_compiled(InvalidException)   # True / False
 ```
 
 ### `round_mode_compiled(name)`
@@ -169,10 +168,12 @@ r = fma(ct.c_double(float("inf")), ct.c_double(0.0), ct.c_double(0.0),
 ### Querying compile-time feature support
 
 ```python
-from python_fma import exception_compiled, round_mode_compiled
+from python_fma import exception_compiled, round_mode_compiled, InvalidException
 
 if not round_mode_compiled("FE_UPWARD"):
     print("FE_UPWARD not available in this build")
+if not exception_compiled(InvalidException):
+    print("Invalid exception detection not available in this build")
 ```
 
 ---
