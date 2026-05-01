@@ -5,8 +5,42 @@ build-backend = "scikit_build_core.build"
 [project]
 name = "python-fma"
 version = "0.2.0"
-description = "FMA binding module with 32-bit float support and configurable rounding modes"
+description = "Fused multiply-add with 32-bit float support and configurable IEEE 754 rounding modes"
 requires-python = ">=3.10"
+readme = "README.md"
+license = "MPL-2.0"
+license-files = ["LICENSE"]
+authors = [{ name = "LXYan2333", email = "lxyan@stu.xmu.edu.cn" }]
+keywords = [
+    "fma",
+    "fused-multiply-add",
+    "floating-point",
+    "ieee-754",
+    "rounding",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: C",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[project.urls]
+Homepage = "https://github.com/LXYan2333/python_fma"
+Repository = "https://github.com/LXYan2333/python_fma"
+Issues = "https://github.com/LXYan2333/python_fma/issues"
 
 [tool.scikit-build]
 wheel.packages = ["src/python_fma"]
