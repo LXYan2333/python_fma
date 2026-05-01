@@ -47,7 +47,7 @@ Once the project has code, follow these conventions by default unless a specific
 - **Formatting/linting**: Use `ruff` for both formatting and linting, and use `pyright` strict mode to check types.
 - **Import sorting**: Use `ruff check --select I --fix` for import sorting
 - **Project structure**: Use src convension
-- **C code**: Use C11 standard. Please read manuals about `fma` and `fenv` for the C API used.
-- **CMake code**: Use CMake to manage C code, and use `try_compile` to check whether these rounding mode and float point exception is supported by current implementation. A `test_exception_round_support.h.in` in `./cmake` with `#cmakedefine01` to reflect exception and round support is configured to a header file under `${CMAKE_CURRENT_BUILD_DIRECTORY}` for c code to report unsupported exception and round mode. Use `target_sources` to add `PUBLIC` header file to the target, and use `target_include_directory` to add PRIVATE and test result headers.
+- **C code**: Use C11 standard. Please read manuals about `fma` and `fenv` for the C API used. Use `#ifdef FE_*` preprocessor guards to detect rounding mode and FP exception availability at compile time.
+- **CMake code**: Use CMake to manage C code. Keep CMakeLists.txt minimal — just `add_library`, link `m` on non-Windows, add compiler FP flags (`/fp:strict` for MSVC, `-frounding-math -fsignaling-nans` for Clang/GCC), and `install`.
 - **C cinding**: Use `Ctypes` to do C binding. the C code must be formatted by `/usr/bin/clang-format-22` with `./.clang-format` config.
 - **CI**: A dockerfile to build this project with `ABI3` in manylinux2014, manylinux_2_28, manylinux_2_34. Do not automatically run docker, due to limited disk space. Please add a Github CI file to build them. the output binary file should be in `./wheelhouse` folder.

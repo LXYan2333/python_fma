@@ -232,7 +232,6 @@ Windows and macOS wheels are built natively on GitHub Actions runners. See
 ```
 python-fma/
 ├── csrc/                  # C source (fma_module.c, fma_module.h, CMakeLists.txt)
-├── cmake/                 # CMake templates for compile-time feature detection
 ├── src/
 │   └── python_fma/
 │       ├── __init__.py    # Public Python API
