@@ -1,6 +1,7 @@
 import ctypes as ct
 
 import pytest
+from python_fma import _ROUND_MODE_MAP
 from tests.helpers import (
     bits_to_double,
     bits_to_float,
@@ -86,13 +87,6 @@ class TestSubnormalRoundingDouble:
         mul = ct.c_double(multiplier)
         zero = ct.c_double(0.0)
 
-        _ROUND_MODE_MAP = {
-            "FE_TONEAREST": 0,
-            "FE_UPWARD": 1,
-            "FE_DOWNWARD": 2,
-            "FE_TOWARDZERO": 3,
-        }
-
         for mode_name, expected in expected_bits.items():
             result, flags = fma_double_raw(small, mul, zero, _ROUND_MODE_MAP[mode_name])
             result_bits = ct.c_uint64.from_buffer(result).value
@@ -173,13 +167,6 @@ class TestSubnormalRoundingFloat:
         small = bits_to_float("1")  # smallest float subnormal, 2^(-149)
         mul = ct.c_float(multiplier)
         zero = ct.c_float(0.0)
-
-        _ROUND_MODE_MAP = {
-            "FE_TONEAREST": 0,
-            "FE_UPWARD": 1,
-            "FE_DOWNWARD": 2,
-            "FE_TOWARDZERO": 3,
-        }
 
         for mode_name, expected in expected_bits.items():
             result, flags = fma_float_raw(small, mul, zero, _ROUND_MODE_MAP[mode_name])

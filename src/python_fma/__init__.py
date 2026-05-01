@@ -22,14 +22,14 @@ __all__: list[str] = [
 
 _FMA_DYNAMIC = -1
 
-_ROUND_MODE_MAP: dict[str, int] = {
+_ROUND_MODE_MAP: dict[RoundMode, int] = {
     "FE_TONEAREST": 0,
     "FE_UPWARD": 1,
     "FE_DOWNWARD": 2,
     "FE_TOWARDZERO": 3,
 }
 
-_EXC_TYPE_MAP: dict[str, int] = {
+_EXC_TYPE_MAP: dict[ExcType, int] = {
     "FE_INVALID": 0,
     "FE_DIVBYZERO": 1,
     "FE_OVERFLOW": 2,
@@ -81,17 +81,16 @@ class FeatureNotCompiledError(FloatException):
 
 CtFloat = ct.c_double | ct.c_float
 RoundMode = Literal["FE_TONEAREST", "FE_UPWARD", "FE_DOWNWARD", "FE_TOWARDZERO"]
+ExcType = Literal["FE_INVALID", "FE_DIVBYZERO", "FE_OVERFLOW", "FE_UNDERFLOW", "FE_INEXACT"]
 
 
-def exception_compiled(name: str) -> bool:
+def exception_compiled(name: ExcType) -> bool:
     """Return whether detection of the floating-point exception *name* is
     available in the C build.
 
     Parameters
     ----------
-    name : str
-        One of ``"FE_INVALID"``, ``"FE_DIVBYZERO"``, ``"FE_OVERFLOW"``,
-        ``"FE_UNDERFLOW"``, or ``"FE_INEXACT"``.
+    name : ExcType
 
     Returns
     -------
@@ -114,12 +113,12 @@ def exception_compiled(name: str) -> bool:
     return _lib.fma_exception_compiled(exc_type)
 
 
-def round_mode_compiled(name: str) -> bool:
+def round_mode_compiled(name: RoundMode) -> bool:
     """Return whether the rounding mode *name* was detected at compile time.
 
     Parameters
     ----------
-    name : str
+    name : RoundMode
         One of ``"FE_TONEAREST"``, ``"FE_UPWARD"``, ``"FE_DOWNWARD"``,
         or ``"FE_TOWARDZERO"``.
 
@@ -144,14 +143,12 @@ def round_mode_compiled(name: str) -> bool:
     return _lib.fma_round_mode_compiled(mode)
 
 
-def round_mode_supported(name: str) -> bool:
+def round_mode_supported(name: RoundMode) -> bool:
     """Return whether the rounding mode *name* is supported at runtime.
 
     Parameters
     ----------
-    name : str
-        One of ``"FE_TONEAREST"``, ``"FE_UPWARD"``, ``"FE_DOWNWARD"``,
-        or ``"FE_TOWARDZERO"``.
+    name : RoundMode
 
     Returns
     -------
