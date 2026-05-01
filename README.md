@@ -1,6 +1,6 @@
 # python-fma
 
-![coverage](badges/coverage.svg)
+![coverage](badges/coverage.svg) ![tests](badges/tests.svg)
 
 A Python **fused multiply-add** (FMA) binding with **32 and 64-bit float** support and
 **configurable IEEE 754 rounding modes**.
