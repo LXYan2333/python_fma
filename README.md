@@ -18,6 +18,8 @@ only and does not expose the rounding direction. This module fills both gaps:
 
 I write this project with vibe coding, but I carefully read every line in `/src/` and `/csrc/` folder, and I glanced at test code (and provides some data for rounding test), so the core logic should be ok.
 
+The coverage test rate is high, and all non-platform-dependent code is covered in test.
+
 ---
 
 ## Installation
