@@ -1,15 +1,12 @@
-name: Build wheels
+name: Release
 
 on:
   push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-  workflow_dispatch:
+    tags: ['v*']
 
 jobs:
-  build-linux:
-    name: ${{ matrix.image }}
+  build-linux-x86_64:
+    name: linux-x86_64 (${{ matrix.image }})
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -18,20 +15,8 @@ jobs:
           - manylinux_2_28_x86_64
           - manylinux_2_34_x86_64
       fail-fast: false
-
     steps:
       - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.10"
-
-      - name: Build, install, and run tests
-        run: |
-          pip install cmake scikit-build-core
-          pip install .
-          pip install pytest
-          python -m pytest tests/ -v
 
       - name: Build wheel via Docker
         run: |
@@ -44,14 +29,13 @@ jobs:
             -v "${{ github.workspace }}/wheelhouse:/wheelhouse" \
             builder
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
-          name: wheels-${{ matrix.image }}
+          name: wheels-linux-x86_64-${{ matrix.image }}
           path: wheelhouse/*.whl
 
   build-linux-aarch64:
-    name: ${{ matrix.image }}
+    name: linux-aarch64 (${{ matrix.image }})
     runs-on: ubuntu-24.04-arm
     strategy:
       matrix:
@@ -60,20 +44,8 @@ jobs:
           - manylinux_2_28_aarch64
           - manylinux_2_34_aarch64
       fail-fast: false
-
     steps:
       - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.10"
-
-      - name: Build, install, and run tests
-        run: |
-          pip install cmake scikit-build-core
-          pip install .
-          pip install pytest
-          python -m pytest tests/ -v
 
       - name: Build wheel via Docker
         run: |
@@ -86,10 +58,9 @@ jobs:
             -v "${{ github.workspace }}/wheelhouse:/wheelhouse" \
             builder
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
-          name: wheels-${{ matrix.image }}
+          name: wheels-linux-aarch64-${{ matrix.image }}
           path: wheelhouse/*.whl
 
   build-windows-x86_64:
@@ -105,17 +76,10 @@ jobs:
       - name: Install build tools
         run: pip install cmake scikit-build-core
 
-      - name: Build, install, and run tests
-        run: |
-          pip install .
-          pip install pytest
-          python -m pytest tests/ -v
-
       - name: Build wheel
         run: pip wheel . --no-deps -w wheelhouse
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: wheels-windows-x86_64
           path: wheelhouse/*.whl
@@ -133,17 +97,10 @@ jobs:
       - name: Install build tools
         run: pip install cmake scikit-build-core
 
-      - name: Build, install, and run tests
-        run: |
-          pip install .
-          pip install pytest
-          python -m pytest tests/ -v
-
       - name: Build wheel
         run: pip wheel . --no-deps -w wheelhouse
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: wheels-windows-arm64
           path: wheelhouse/*.whl
@@ -161,17 +118,10 @@ jobs:
       - name: Install build tools
         run: pip install cmake scikit-build-core
 
-      - name: Build, install, and run tests
-        run: |
-          pip install .
-          pip install pytest
-          python -m pytest tests/ -v
-
       - name: Build wheel
         run: pip wheel . --no-deps -w wheelhouse
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: wheels-macos-arm64
           path: wheelhouse/*.whl
@@ -189,48 +139,34 @@ jobs:
       - name: Install build tools
         run: pip install cmake scikit-build-core
 
-      - name: Build, install, and run tests
-        run: |
-          pip install .
-          pip install pytest
-          python -m pytest tests/ -v
-
       - name: Build wheel
         run: pip wheel . --no-deps -w wheelhouse
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: wheels-macos-x86_64
           path: wheelhouse/*.whl
 
-  coverage:
-    name: coverage
+  release:
+    name: Create Release & Publish to PyPI
+    needs:
+      [build-linux-x86_64, build-linux-aarch64, build-windows-x86_64, build-windows-arm64, build-macos-arm64, build-macos-x86_64]
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    environment: release
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
+      - uses: actions/download-artifact@v4
         with:
-          python-version: "3.10"
+          path: dist
+          pattern: wheels-*
+          merge-multiple: true
 
-      - name: Install package
-        run: |
-          pip install cmake scikit-build-core
-          pip install -e .
-
-      - name: Run tests with coverage
-        run: pip install pytest-cov && python -m pytest tests/ --cov=python_fma --cov-report=json
-
-      - name: Generate badge
-        run: |
-          mkdir -p badges
-          pip install anybadge
-          total=$(python -c "import json; d=json.load(open('coverage.json')); print(f'{float(d[\"totals\"][\"percent_covered_display\"]):.0f}')")
-          anybadge --value="$total" --file=badges/coverage.svg --label=coverage --suffix=% --color=green --overwrite
-
-      - name: Upload coverage badge
-        uses: actions/upload-artifact@v4
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
         with:
-          name: coverage-badge
-          path: badges/
+          files: dist/*.whl
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
