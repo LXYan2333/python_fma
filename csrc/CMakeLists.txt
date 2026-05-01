@@ -5,6 +5,12 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 
 add_library(fma_module SHARED fma_module.c)
 
+# MSVC does not add the "lib" prefix that GCC/Clang add on Linux/macOS.
+# Keep the output name consistent so the Python side always finds libfma_module.*.
+if(WIN32)
+  set_target_properties(fma_module PROPERTIES PREFIX "lib")
+endif()
+
 target_sources(fma_module PUBLIC
   FILE_SET HEADERS
     BASE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}"

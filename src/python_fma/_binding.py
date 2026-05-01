@@ -23,21 +23,28 @@ elif sys.platform == "win32":           # pragma: no cover
     _ext = ".dll"                       # pragma: no cover
 else:                                   # pragma: no cover
     raise ImportError(f"unsupported platform: {sys.platform}")
-# fmt: on")
+# fmt: on
 
 _lib_name = f"libfma_module{_ext}"
 
-# Editable installs (scikit-build-core) put the .so in site-packages while
-# Python sources are imported from the source tree.  Use the import-system
-# location first (via the editable hook's known_wheel_files mapping), then
-# fall back to __file__-relative for regular installs.
-_spec = _iu.find_spec(f"python_fma.{_lib_name.rsplit('.', 1)[0]}")
-# fmt: off
-if _spec is not None and _spec.origin is not None and os.path.exists(_spec.origin):
-    _lib_path = _spec.origin
-else:                                   # pragma: no cover
-    _lib_path = os.path.join(os.path.dirname(__file__), _lib_name)
-# fmt: on
+
+def _find_library() -> str:
+    """Locate the shared library, supporting both regular and editable installs."""
+    # Ask the import system where python_fma lives.  For editable installs
+    # scikit-build-core extends __path__ to include the site-packages
+    # directory where the shared library is installed.
+    _pkg_spec = _iu.find_spec("python_fma")
+    if _pkg_spec is not None and _pkg_spec.submodule_search_locations:
+        for _loc in _pkg_spec.submodule_search_locations:
+            _candidate = os.path.join(_loc, _lib_name)
+            if os.path.exists(_candidate):
+                return _candidate
+
+    # Fallback: alongside this file.
+    return os.path.join(os.path.dirname(__file__), _lib_name)
+
+
+_lib_path = _find_library()
 
 lib = ct.CDLL(_lib_path)
 
